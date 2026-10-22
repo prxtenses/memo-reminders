@@ -5,6 +5,5 @@ src-tauri/gen
 
 # local only
 CLAUDE.md
-START.bat
 src-tauri/.cargo/
 *.tmp.*

@@ -20,6 +20,21 @@ import { useTasks } from "@/store/tasks";
 
 const VIEW_KEYS: View[] = ["today", "pending", "overdue", "done"];
 
+// Último minuto em que o app estava rodando; lembretes que venceram depois disso não foram notificados.
+const ALIVE_KEY = "memo.alive";
+const markAlive = () => {
+  try {
+    localStorage.setItem(ALIVE_KEY, String(Date.now()));
+  } catch {}
+};
+const lastAlive = () => {
+  try {
+    return Number(localStorage.getItem(ALIVE_KEY)) || 0;
+  } catch {
+    return 0;
+  }
+};
+
 export default function App() {
   const { tasks, view, query, now, set } = useTasks();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -32,9 +47,11 @@ export default function App() {
       .then(() => {
         // Lembretes que venceram com o app fechado não dispararam: avisa uma vez ao abrir.
         const { tasks, now } = useTasks.getState();
-        const overdue = tasks.filter((t) => isOverdue(t, now)).length;
-        if (overdue > 0) {
-          const body = overdue === 1 ? "Você tem 1 tarefa atrasada." : `Você tem ${overdue} tarefas atrasadas.`;
+        const since = lastAlive();
+        markAlive();
+        const missed = tasks.filter((t) => isOverdue(t, now) && t.remind_at! > since).length;
+        if (missed > 0) {
+          const body = missed === 1 ? "1 lembrete venceu com o Memo fechado." : `${missed} lembretes venceram com o Memo fechado.`;
           void invoke("notify", { title: "Memo", body }).catch(console.error);
         }
         return autoBackup(tasks);
@@ -66,7 +83,10 @@ export default function App() {
       void autoBackup(useTasks.getState().tasks).catch(console.error); // novo dia com o app aberto
     };
     const unfocus = getCurrentWindow().onFocusChanged(({ payload }) => payload && refresh());
-    const timer = setInterval(() => document.visibilityState === "visible" && set({ now: Date.now() }), 60_000);
+    const timer = setInterval(() => {
+      markAlive();
+      if (document.visibilityState === "visible") set({ now: Date.now() });
+    }, 60_000);
     return () => {
       clearInterval(timer);
       void unfocus.then((off) => off());
