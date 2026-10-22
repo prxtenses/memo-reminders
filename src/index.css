@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* Tema escolhido em Configurações (Sistema/Claro/Escuro); src/lib/theme.ts define data-theme no <html>. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant compact (&:where([data-density=compact] *));
+
+:root {
+  color-scheme: light;
+  --radius: 0.75rem;
+  --background: #ffffff;
+  --foreground: #141414;
+  --card: #ffffff;
+  --card-foreground: #141414;
+  --popover: #ffffff;
+  --popover-foreground: #141414;
+  --primary: #141414;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f3f3;
+  --secondary-foreground: #141414;
+  --muted: #f3f3f3;
+  --muted-foreground: #6b6b6b; /* contraste AA no branco e no #f3f3f3 */
+  --accent: #ececec;
+  --accent-foreground: #141414;
+  --destructive: #d92d20;
+  --border: #e6e6e6;
+  --input: #f0f0f0;
+  --ring: #141414;
+  --brand: #0066ff;
+  --overdue: #b42318;
+  --sidebar: #f5f5f4;
+  --sidebar-foreground: #262626;
+  --sidebar-primary: #141414;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #e9e9e8;
+  --sidebar-accent-foreground: #141414;
+  --sidebar-border: #e6e6e6;
+  --sidebar-ring: #141414;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark; /* barras de rolagem e campos nativos escuros */
+  --background: #1c1c1e;
+  --foreground: #f2f2f2;
+  --card: #232325;
+  --card-foreground: #f2f2f2;
+  --popover: #2a2a2c;
+  --popover-foreground: #f2f2f2;
+  --primary: #f2f2f2;
+  --primary-foreground: #141414;
+  --secondary: #2c2c2e;
+  --secondary-foreground: #f2f2f2;
+  --muted: #2c2c2e;
+  --muted-foreground: #a1a1a6;
+  --accent: #323234;
+  --accent-foreground: #f2f2f2;
+  --destructive: #ff6b5e;
+  --border: #333336;
+  --input: #2c2c2e;
+  --ring: #f2f2f2;
+  --brand: #4d94ff;
+  --overdue: #ff8a7a;
+  --sidebar: #161618;
+  --sidebar-foreground: #e5e5e5;
+  --sidebar-primary: #f2f2f2;
+  --sidebar-primary-foreground: #141414;
+  --sidebar-accent: #2a2a2c;
+  --sidebar-accent-foreground: #f2f2f2;
+  --sidebar-border: #2a2a2c;
+  --sidebar-ring: #f2f2f2;
+}
+
+@theme inline {
+  --font-sans: "Inter Variable", "Segoe UI", system-ui, sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-overdue: var(--overdue);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv11", "ss01";
+    /* App de desktop: sem seleção de texto fora dos campos. */
+    user-select: none;
+    overflow: hidden;
+  }
+  /* Barra flutuante (Ctrl+Alt+N): a janela é transparente e o cartão desenha a própria sombra. */
+  html.quick,
+  html.quick body {
+    background: transparent;
+  }
+  /* Tamanho do texto: tudo é medido em rem, então a interface inteira acompanha.
+     A barra flutuante tem tamanho fixo e fica de fora. */
+  html:not(.quick)[data-text="sm"] {
+    font-size: 14px;
+  }
+  html:not(.quick)[data-text="lg"] {
+    font-size: 18px;
+  }
+  input,
+  textarea,
+  [contenteditable] {
+    user-select: text;
+  }
+  /* Foco visível para navegação por teclado (acessibilidade). */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* Troca de tema: transição suave de cores (View Transitions do WebView2). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* "Mostrar animações" desligado no Windows: corta transições CSS (o Framer Motion já respeita via MotionConfig). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

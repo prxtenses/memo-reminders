@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "notes",
+  "description": "Rascunho do Ctrl+Alt+B: só esconder e arrastar a janela (o texto fica no armazenamento local do WebView)",
+  "windows": ["notes"],
+  "permissions": ["core:default", "core:window:allow-hide", "core:window:allow-start-dragging"]
+}

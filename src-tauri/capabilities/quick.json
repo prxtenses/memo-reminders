@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "quick",
+  "description": "Barra flutuante do Ctrl+Alt+N: só envia a tarefa para a janela principal (sem acesso ao banco ou arquivos)",
+  "windows": ["quick"],
+  "permissions": ["core:default", "core:window:allow-hide"]
+}

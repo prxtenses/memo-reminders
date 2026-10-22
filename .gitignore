@@ -1,0 +1,10 @@
+node_modules
+dist
+src-tauri/target
+src-tauri/gen
+
+# local only
+CLAUDE.md
+START.bat
+src-tauri/.cargo/
+*.tmp.*

@@ -1,0 +1,20 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Permissões da janela principal (o frontend só pode usar o que está listado aqui)",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-minimize",
+    "core:window:allow-toggle-maximize",
+    "core:window:allow-hide",
+    "core:window:allow-start-dragging",
+    "sql:default",
+    "sql:allow-execute",
+    "autostart:default",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "fs:allow-applocaldata-read-recursive",
+    "fs:allow-applocaldata-write-recursive"
+  ]
+}
