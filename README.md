@@ -11,7 +11,7 @@ Built with Tauri 2, React and SQLite.
 
 ## Download
 
-Grab the installer from [Releases](https://github.com/prxtenses/memo-reminders/releases/latest). Windows 10/11, no admin needed.
+Grab the installer from [Releases](https://github.com/prxtenses/memo-reminders/releases/latest). Windows 10/11, no admin needed. You only download it once: Memo checks for new versions and offers to update itself.
 
 ## Features
 
@@ -21,6 +21,7 @@ Grab the installer from [Releases](https://github.com/prxtenses/memo-reminders/r
 - Views: Today, Pending, Overdue, Done
 - Light/dark theme, command palette (`Ctrl+K`)
 - Daily automatic backup + JSON export/import
+- Self-updating from GitHub Releases
 
 ## Running
 
