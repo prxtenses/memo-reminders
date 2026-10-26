@@ -1,9 +1,17 @@
 # Memo
 
 Small task reminder app for Windows. Lives in the tray, fires native notifications, works fully offline.
-UI is in Portuguese (pt-BR).
 
 Built with Tauri 2, React and SQLite.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/screenshot-dark.png">
+  <img alt="Memo" src="docs/screenshot.png">
+</picture>
+
+## Download
+
+Grab the installer from [Releases](https://github.com/prxtenses/memo-reminders/releases/latest). Windows 10/11, no admin needed.
 
 ## Features
 
