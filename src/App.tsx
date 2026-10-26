@@ -37,6 +37,31 @@ const lastAlive = () => {
   }
 };
 
+// Sem internet ou sem release ainda: falha em silêncio e tenta de novo na próxima verificação.
+const checkUpdate = () =>
+  check()
+    .then((update) => {
+      if (!update) return;
+      // id fixo: verificações repetidas substituem o aviso em vez de empilhar.
+      toast("Atualização disponível!", {
+        id: "update",
+        description: `A versão ${update.version} do Memo está pronta. Deseja atualizar?`,
+        duration: Infinity,
+        action: {
+          label: "Atualizar",
+          onClick: () => {
+            const id = toast.loading("Baixando atualização...");
+            update
+              .downloadAndInstall()
+              .then(relaunch)
+              .catch((e) => toast.error("Não foi possível atualizar.", { id, description: String(e) }));
+          },
+        },
+        cancel: { label: "Depois", onClick: () => {} },
+      });
+    })
+    .catch(console.error);
+
 export default function App() {
   const { tasks, view, query, now, set } = useTasks();
   const searchRef = useRef<HTMLInputElement>(null);
@@ -62,27 +87,10 @@ export default function App() {
       // Só agora a janela aparece (já desenhada), evitando a tela branca ao abrir.
       .finally(() => requestAnimationFrame(() => void invoke("app_ready")));
 
-    // Sem internet ou sem release ainda: falha em silêncio e tenta de novo na próxima abertura.
-    check()
-      .then((update) => {
-        if (!update) return;
-        toast("Atualização disponível!", {
-          description: `A versão ${update.version} do Memo está pronta. Deseja atualizar?`,
-          duration: Infinity,
-          action: {
-            label: "Atualizar",
-            onClick: () => {
-              const id = toast.loading("Baixando atualização...");
-              update
-                .downloadAndInstall()
-                .then(relaunch)
-                .catch((e) => toast.error("Não foi possível atualizar.", { id, description: String(e) }));
-            },
-          },
-          cancel: { label: "Depois", onClick: () => {} },
-        });
-      })
-      .catch(console.error);
+    // O app vive dias na bandeja: confere ao abrir e de novo a cada 6 h.
+    checkUpdate();
+    const timer = setInterval(checkUpdate, 6 * 60 * 60 * 1000);
+    return () => clearInterval(timer);
   }, []);
 
   useEffect(() => {
