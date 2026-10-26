@@ -77,6 +77,14 @@
         "languages": ["PortugueseBR"],
         "displayLanguageSelector": false
       }
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDkzRDFFQkZFMTNFQTA5MUMKUldRY0Nlb1QvdXZSay81RDBvajBzd0x0L2paNUROWFlMaitzNkJOTGx2QVlYc0tIVTNwNktiQjEK",
+      "endpoints": ["https://github.com/prxtenses/memo-reminders/releases/latest/download/latest.json"],
+      "windows": { "installMode": "passive" }
     }
   }
 }

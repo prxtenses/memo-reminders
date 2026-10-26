@@ -1,6 +1,7 @@
 name: Release
 
-# Push a tag like v0.2.0 to build the Windows installer and attach it to a draft release.
+# Push a tag like v0.2.0 to build the Windows installer and publish the release.
+# Published (not draft) so installed apps see it through latest.json and offer the update.
 on:
   push:
     tags: ["v*"]
@@ -24,7 +25,9 @@ jobs:
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
           releaseName: Memo ${{ github.ref_name }}
-          releaseDraft: true
+          releaseDraft: false

@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import { relaunch } from "@tauri-apps/plugin-process";
+import { check } from "@tauri-apps/plugin-updater";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
@@ -59,6 +61,28 @@ export default function App() {
       .catch((e) => toast.error("Erro ao abrir o banco de dados.", { description: String(e) }))
       // Só agora a janela aparece (já desenhada), evitando a tela branca ao abrir.
       .finally(() => requestAnimationFrame(() => void invoke("app_ready")));
+
+    // Sem internet ou sem release ainda: falha em silêncio e tenta de novo na próxima abertura.
+    check()
+      .then((update) => {
+        if (!update) return;
+        toast("Atualização disponível!", {
+          description: `A versão ${update.version} do Memo está pronta. Deseja atualizar?`,
+          duration: Infinity,
+          action: {
+            label: "Atualizar",
+            onClick: () => {
+              const id = toast.loading("Baixando atualização...");
+              update
+                .downloadAndInstall()
+                .then(relaunch)
+                .catch((e) => toast.error("Não foi possível atualizar.", { id, description: String(e) }));
+            },
+          },
+          cancel: { label: "Depois", onClick: () => {} },
+        });
+      })
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
