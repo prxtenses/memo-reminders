@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getVersion } from "@tauri-apps/api/app";
 import { appLocalDataDir, join } from "@tauri-apps/api/path";
 import { disable, enable, isEnabled } from "@tauri-apps/plugin-autostart";
 import { motion } from "framer-motion";
@@ -102,11 +103,13 @@ export function SettingsDialog() {
   const [backupDir, setBackupDir] = useState("");
   const [size, setSize] = useState(loadSize);
   const [density, setDensity] = useState(loadDensity);
+  const [version, setVersion] = useState("");
 
   useEffect(() => {
     if (!settingsOpen) return;
     isEnabled().then(setAutostart).catch(() => setAutostart(false));
     appLocalDataDir().then((d) => join(d, "backups")).then(setBackupDir);
+    getVersion().then(setVersion);
   }, [settingsOpen]);
 
   const toggleAutostart = async (on: boolean) => {
@@ -194,6 +197,8 @@ export function SettingsDialog() {
             ))}
           </dl>
         </section>
+
+        <p className="text-center text-xs text-muted-foreground">Memo v{version}</p>
       </DialogContent>
     </Dialog>
   );

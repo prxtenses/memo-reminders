@@ -5,7 +5,7 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check } from "@tauri-apps/plugin-updater";
 import { AnimatePresence, motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Search, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -45,6 +45,15 @@ const checkUpdate = () =>
       // id fixo: verificações repetidas substituem o aviso em vez de empilhar.
       toast("Atualização disponível!", {
         id: "update",
+        // Cores invertidas para se destacar dos avisos comuns.
+        icon: <Sparkles className="size-4" />,
+        classNames: {
+          toast: "bg-primary! text-primary-foreground! border-primary! shadow-xl!",
+          title: "font-semibold!",
+          description: "text-primary-foreground/80!",
+          actionButton: "bg-primary-foreground! text-primary! font-semibold!",
+          cancelButton: "bg-primary-foreground/15! text-primary-foreground!",
+        },
         description: `A versão ${update.version} do Memo está pronta. Deseja atualizar?`,
         duration: Infinity,
         action: {
